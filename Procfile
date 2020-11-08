@@ -1,1 +1,1 @@
-worker: py InproBot.py
+worker: python3 InproBot.py
