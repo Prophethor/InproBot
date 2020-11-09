@@ -2,6 +2,7 @@ from typing import List, Any
 
 import discord
 import asyncio
+import json
 from discord.ext import commands
 
 
@@ -95,6 +96,58 @@ class Moderator(commands.Cog):
         if not found:
             ctx.send("No such user")
 
+
+    #warn, wnum, wlist, wclear
+    @commands.command()
+    async def warn(self, ctx, member: discord.Member, *, reason=None):
+
+        with open("../data/warnings.json") as f:
+            data = json.load(f)
+
+        if reason is None:
+            await ctx.send("Must have a reason for warning")
+        else:
+            data[ctx.guild.id][member].append(reason)
+
+        with open("../data/warnings.json") as f:
+            json.dump(data,f,indent=4)
+
+    @commands.command()
+    async def wnum(self,ctx,member: discord.Member):
+        with open("../data/warnings.json") as f:
+            data = json.load(f)
+
+        if data[ctx.guild.id][member] is None:
+            ctx.send(f"{member} has 0 warnings")
+        else:
+            ctx.send(f"{member} has {len(data[ctx.guild.id][member])} warnings")
+
+
+    @commands.command()
+    async def wlist(self,ctx,member: discord.Member):
+        with open("../data/warnings.json") as f:
+            data = json.load(f)
+
+        if data[ctx.guild.id][member] is None:
+            await ctx.send(f"{member} has no warnings")
+        else:
+            if len(data[ctx.guild.id][member])>0:
+                response = ",\n".join(data[ctx.guild.id][member])
+                await ctx.send(response)
+            else:
+                await ctx.send(f"{member} has no warnings")
+
+
+    @commands.command()
+    async def wclear(self,ctx,member: discord.Member):
+        with open("../data/warnings.json") as f:
+            data = json.load(f)
+
+        if data[ctx.guild.id][member] is None:
+            await ctx.send(f"{member} has no warnings")
+        else:
+            data[ctx.guild.id][member].clear()
+            await ctx.send(f"{member}'s warnings cleared")
 
 def setup(client):
     client.add_cog(Moderator(client))

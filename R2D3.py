@@ -54,7 +54,6 @@ async def reload(ctx, extension):
 async def change_status():
     await client.change_presence(activity=discord.Game(next(status)))
 
-
 for filename in os.listdir('./cogs'):
     if filename.endswith('.py'):
         client.load_extension(f'cogs.{filename[:-3]}')
