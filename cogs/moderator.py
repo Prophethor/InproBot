@@ -10,9 +10,10 @@ class Moderator(commands.Cog):
     def __init__(self, client):
         self.client = client
 
+    #mute, tmpmute, unmute
     @commands.command(
         description="Mutes user indefinitely",
-        help="-> mute <user> <reason>(optional) -> mutes <user>"
+        help="mutes user"
     )
     @commands.has_permissions(administrator=True)
     async def mute(self, ctx, member: discord.Member, *, reason=None):
@@ -26,7 +27,7 @@ class Moderator(commands.Cog):
         name="tmpmute",
         aliases=["tmute"],
         description="Mutes user for a definite period of time",
-        help="-> tmpmute|tmute <user> <time> <reason>(optional) -> mutes <user> for <time> minutes"
+        help="mutes user for given number of minutes"
     )
     @commands.has_permissions(administrator=True)
     async def temporary_mute(self, ctx, member: discord.Member, time, *, reason=None):
@@ -42,16 +43,17 @@ class Moderator(commands.Cog):
 
     @commands.command(
         description="Unmutes muted user",
-        help="-> unmute <user> -> unmutes <user>"
+        help="unmutes user"
     )
     @commands.has_permissions(administrator=True)
     async def unmute(self, ctx, member: discord.Member):
         await member.edit(mute=False)
         await ctx.send(f"{member} was unmuted")
 
+    #kick, ban, unban
     @commands.command(
         description="Kicks user from server",
-        help="-> kick <user> <reason>(optional) -> kicks <user> from server"
+        help="kicks user from server"
     )
     @commands.has_permissions(administrator=True)
     async def kick(self, ctx, member: discord.Member, *, reason=None):
@@ -64,7 +66,7 @@ class Moderator(commands.Cog):
 
     @commands.command(
         description="Bans user from server, kicking him, deleting all of his messages and permitting reentry",
-        help="-> ban <user> <reason>(optional) -> bans <user> from server"
+        help="bans user from server"
     )
     @commands.has_permissions(administrator=True)
     async def ban(self, ctx, member: discord.Member, *, reason=None):
@@ -77,7 +79,7 @@ class Moderator(commands.Cog):
 
     @commands.command(
         description="Unbans user from server, reenabling him to enter the server",
-        help="-> unban <username>#<discriminator> -> unbans user <username>#<discriminator>"
+        help="unbans user (format username#tag because you can't mention them)"
     )
     @commands.has_permissions(administrator=True)
     async def unban(self, ctx, *, member):

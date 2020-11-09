@@ -12,7 +12,7 @@ class Ping(commands.Cog):
 
     @commands.command(
         description="Checks bot responsiveness and latency",
-        help="ping -> checks latency"
+        help="checks latency"
     )
     async def ping(self,ctx):
         await ctx.send(f'Pong! {round(self.client.latency*1000)}ms')
