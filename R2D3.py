@@ -24,7 +24,7 @@ async def on_command_error(ctx, error):
 
 @client.command(
     description="Loads a cog with all it's functionalities so they can be used",
-    help="load <cog> -> loads <cog> into the project"
+    help="-> load <cog> -> loads <cog> into the project"
 )
 @commands.has_permissions(administrator=True)
 async def load(ctx, extension):
@@ -33,7 +33,7 @@ async def load(ctx, extension):
 
 @client.command(
     description="Unloads a cog and all it's functionalities",
-    help="unload <cog> -> unloads <cog>"
+    help="-> unload <cog> -> unloads <cog>"
 )
 @commands.has_permissions(administrator=True)
 async def unload(ctx, extension):
@@ -42,7 +42,7 @@ async def unload(ctx, extension):
 
 @client.command(
     description="Reloads a cog (needs to be done when cog code is edited)",
-    help="reload <cog> -> unloads then loads <cog> again"
+    help="-> reload <cog> -> unloads then loads <cog> again"
 )
 @commands.has_permissions(administrator=True)
 async def reload(ctx, extension):
