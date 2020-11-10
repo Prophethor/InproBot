@@ -94,11 +94,11 @@ class Moderator(commands.Cog):
         if not found:
             ctx.send("No such user")
 
-    @checks.can_managemsg()
     @commands.command(
         description="Deletes given number of messages in the channel it's called.",
         help="deletes last <count> messages"
     )
+    @checks.can_managemsg()
     async def clear(self, ctx, count: int):
         await ctx.message.channel.purge(limit=count+1)
         await ctx.send(f"{count} messages deleted")
@@ -107,6 +107,7 @@ class Moderator(commands.Cog):
         description="Messages a user with a warning considering their bad behaviour.",
         help="dms a user with reason"
     )
+    @checks.can_kick()
     async def warn(self,ctx,user:discord.Member,*,reason=None):
         if reason is None:
             await ctx.send("You need to specify a reason")
