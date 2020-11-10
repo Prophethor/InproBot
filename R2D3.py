@@ -1,9 +1,11 @@
 import discord
 import os
+import json
 from discord.ext import commands, tasks
 from itertools import cycle
 
-PREFIX = ("!", "yo ")
+
+PREFIX = "yo "
 TOKEN = os.environ['BOT_TOKEN']
 
 client = commands.Bot(command_prefix=PREFIX)

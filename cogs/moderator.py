@@ -1,9 +1,7 @@
-from typing import List, Any
-
 import discord
 import asyncio
-import json
 from discord.ext import commands
+from utils import checks
 
 
 class Moderator(commands.Cog):
@@ -16,7 +14,7 @@ class Moderator(commands.Cog):
         description="Mutes user indefinitely",
         help="mutes user"
     )
-    @commands.has_permissions(administrator=True)
+    @checks.can_mute()
     async def mute(self, ctx, member: discord.Member, *, reason=None):
         await member.edit(mute=True,reason=reason)
         if reason is None:
@@ -30,7 +28,7 @@ class Moderator(commands.Cog):
         description="Mutes user for a definite period of time",
         help="mutes user for given number of minutes"
     )
-    @commands.has_permissions(administrator=True)
+    @checks.can_mute()
     async def temporary_mute(self, ctx, member: discord.Member, time, *, reason=None):
         await member.edit(mute=True)
 
@@ -46,7 +44,7 @@ class Moderator(commands.Cog):
         description="Unmutes muted user",
         help="unmutes user"
     )
-    @commands.has_permissions(administrator=True)
+    @checks.can_mute()
     async def unmute(self, ctx, member: discord.Member):
         await member.edit(mute=False)
         await ctx.send(f"{member} was unmuted")
@@ -56,7 +54,7 @@ class Moderator(commands.Cog):
         description="Kicks user from server",
         help="kicks user from server"
     )
-    @commands.has_permissions(administrator=True)
+    @checks.can_kick()
     async def kick(self, ctx, member: discord.Member, *, reason=None):
         await member.kick(reason=reason)
 
@@ -69,7 +67,7 @@ class Moderator(commands.Cog):
         description="Bans user from server, kicking him, deleting all of his messages and permitting reentry",
         help="bans user from server"
     )
-    @commands.has_permissions(administrator=True)
+    @checks.can_ban()
     async def ban(self, ctx, member: discord.Member, *, reason=None):
         await member.ban(reason=reason)
 
@@ -82,7 +80,7 @@ class Moderator(commands.Cog):
         description="Unbans user from server, reenabling him to enter the server",
         help="unbans user (format username#tag because you can't mention them)"
     )
-    @commands.has_permissions(administrator=True)
+    @checks.can_ban()
     async def unban(self, ctx, *, member):
         banned_members = await ctx.guild.bans()
         name, number = member.split('#')
@@ -96,58 +94,46 @@ class Moderator(commands.Cog):
         if not found:
             ctx.send("No such user")
 
+    @checks.can_managemsg()
+    @commands.command(
+        description="Deletes given number of messages in the channel it's called.",
+        help="deletes last <count> messages"
+    )
+    async def clear(self, ctx, count: int):
+        await ctx.message.channel.purge(limit=count+1)
+        await ctx.send(f"{count} messages deleted")
 
-    #warn, wnum, wlist, wclear
-    @commands.command()
-    async def warn(self, ctx, member: discord.Member, *, reason=None):
-
-        with open("../data/warnings.json") as f:
-            data = json.load(f)
-
+    @commands.command(
+        description="Messages a user with a warning considering their bad behaviour.",
+        help="dms a user with reason"
+    )
+    async def warn(self,ctx,user:discord.Member,*,reason=None):
         if reason is None:
-            await ctx.send("Must have a reason for warning")
+            await ctx.send("You need to specify a reason")
         else:
-            data[ctx.guild.id][member].append(reason)
+            await user.send(reason)
 
-        with open("../data/warnings.json") as f:
-            json.dump(data,f,indent=4)
-
-    @commands.command()
-    async def wnum(self,ctx,member: discord.Member):
-        with open("../data/warnings.json") as f:
-            data = json.load(f)
-
-        if data[ctx.guild.id][member] is None:
-            ctx.send(f"{member} has 0 warnings")
-        else:
-            ctx.send(f"{member} has {len(data[ctx.guild.id][member])} warnings")
-
-
-    @commands.command()
-    async def wlist(self,ctx,member: discord.Member):
-        with open("../data/warnings.json") as f:
-            data = json.load(f)
-
-        if data[ctx.guild.id][member] is None:
-            await ctx.send(f"{member} has no warnings")
-        else:
-            if len(data[ctx.guild.id][member])>0:
-                response = ",\n".join(data[ctx.guild.id][member])
-                await ctx.send(response)
-            else:
-                await ctx.send(f"{member} has no warnings")
+    @commands.Cog.listener()
+    async def on_message(self,message):
+        if message.author != self.client:
+            nono_words = [
+                "Ugren",
+                "ugren",
+                "peepee poopoo",
+                "nigga",
+                "nigger",
+                "disproportionate",
+                "Ugrenovic",
+                "ugrenovic"
+            ]
+            for word in nono_words:
+                if message.content.find(word)!=-1:
+                    await message.channel.purge(limit=1)
+                    word = word[:1]+'*'+word[2:]
+                    await message.author.send(f"You used a nono word in that message: {word}")
+                    await message.channel.send("Oopsie, that message contained a nono word")
 
 
-    @commands.command()
-    async def wclear(self,ctx,member: discord.Member):
-        with open("../data/warnings.json") as f:
-            data = json.load(f)
-
-        if data[ctx.guild.id][member] is None:
-            await ctx.send(f"{member} has no warnings")
-        else:
-            data[ctx.guild.id][member].clear()
-            await ctx.send(f"{member}'s warnings cleared")
 
 def setup(client):
     client.add_cog(Moderator(client))
