@@ -1,1 +1,1 @@
-worker: python3 R2D3.py
+worker: node index.js

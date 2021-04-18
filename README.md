@@ -1,2 +1,3 @@
-# InproBot
-Moderator discord bot I'm making for my friends' discord server
+# R2D2
+
+Discord bot I'm making for fun
