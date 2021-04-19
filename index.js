@@ -1,18 +1,19 @@
 const Discord = require('discord.js');
 const client = new Discord.Client();
 const command = require('./command');
-const firstMessage = require('./first_message')
-const privateMessage = require('./private_message')
 const roleClaim = require('./role_claim')
 const poll = require('./poll')
-const tempMessage = require('./temp_message')
 const mongo = require('./mongo')
+const welcome = require('./welcome')
+const messageCount = require('./message_count')
 
 client.on('ready', async ()=>{
     console.log('The client is ready!')
 
     roleClaim(client)
     poll(client)
+    welcome(client)
+    messageCount(client)
 
     await mongo().then((mongoose) => {
         try{
