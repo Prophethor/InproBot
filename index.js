@@ -18,6 +18,8 @@ client.on('ready', async ()=>{
     await mongo().then((mongoose) => {
         try{
             console.log('Connected to mongo!')
+        } catch(err) {
+            console.log(err)
         } finally {
             mongoose.connection.close();
         }

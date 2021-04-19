@@ -55,6 +55,8 @@ module.exports = (client) => {
                 try{
                     const result = await welcomeSchema.findOne({_id:guild.id})
                     cache[guild.id] = data = [result.channelId, result.text]
+                } catch(err) {
+                    console.log(err)
                 } finally {
                     mongoose.connection.close()
                 }
