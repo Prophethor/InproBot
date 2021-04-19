@@ -14,14 +14,6 @@ client.on('ready', async ()=>{
     roleClaim(client)
     poll(client)
 
-    await mongo().then((mongoose) => {
-        try{
-            console.log('Connected to mongo!')
-        } finally {
-            mongoose.connection.close();
-        }
-    })
-
     command(client, 'avatar', (message) => {
         const embed = new Discord.MessageEmbed()
             .setTitle(`Your avatar is`)
