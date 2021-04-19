@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Prophethor/R2D3#readme",
   "dependencies": {
     "discord.js": "^12.5.3",
-    "mongoose": "^5.12.4"
+    "mongoose": "^5.12.4",
+    "redis": "^3.1.1"
   }
 }
