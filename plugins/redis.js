@@ -1,6 +1,6 @@
-const redis = require('./redis')
+const redis = require('redis')
 
-module.exports = () => {
+module.exports = async () => {
     return await new Promise((resolve, reject) => {
         const client = redis.createClient({
             url: process.env.REDIS_PATH
