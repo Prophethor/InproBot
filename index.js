@@ -16,11 +16,12 @@ client.on('ready', async ()=>{
                 readCommands(path.join(dir,file))
             } else if (file !== baseFile) {
                 const options = require(path.join(__dirname, dir, file))
-                commandBase(client, options)
+                commandBase(options)
             }
         }
     }
     readCommands('commands')
+    commandBase.listen(client)
 })
 
 client.login(process.env.BOT_TOKEN)

@@ -1,9 +1,10 @@
 module.exports = {
-    commands: ['add', 'addition'],
+    aliases: ['add', 'addition'],
     expectedArgs: '<num1> <num2>',
-    permissions: [],
+    requiredPermissions: [],
     requiredRoles: [],
     permissionError: 'You need admin permissions to run this command',
+    roleError: 'You need to be math genius',
     minArgs: 2,
     maxArgs: 2,
     callback: (message, arguments, text) => {
