@@ -64,24 +64,24 @@ client.on('ready', async ()=>{
         })
     })
 
-    command(client, 'status', message => {
-        const content = message.content.replace('yo status ', '')
-        client.user.setPresence({
-            activity: {
-                name: content,
-                type:0,
-            },
-        })
-    })
+    //command(client, 'status', message => {
+    //    const content = message.content.replace('yo status ', '')
+    //    client.user.setPresence({
+    //        activity: {
+    //            name: content,
+    //            type:0,
+    //        },
+    //    })
+    //})
 
-    command(client, 'createvoicechannel', (message) => {
-        const content = message.content.replace('yo createvoicechannel ', '')
-        message.guild.channels.create(content, {
-            type: 'voice'
-        }).then((channel) => {
-            channel.setUserLimit(10)
-        })
-    })
+    //command(client, 'createvoicechannel', (message) => {
+    //    const content = message.content.replace('yo createvoicechannel ', '')
+    //    message.guild.channels.create(content, {
+    //        type: 'voice'
+    //    }).then((channel) => {
+    //        channel.setUserLimit(10)
+    //    })
+    //})
 
     command(client, 'serverinfo', (message) => {
         const { guild } = message
