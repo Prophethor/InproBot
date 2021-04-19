@@ -14,7 +14,8 @@ module.exports = (client) => {
                         messageCount:1
                     }
                 }, {
-                    upsert: true
+                    upsert: true,
+                    useFindAndModify: false
                 }).exec()
             } catch(err) {
                 console.log(err)

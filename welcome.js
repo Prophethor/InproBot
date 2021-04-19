@@ -38,7 +38,8 @@ module.exports = (client) => {
                     channelId: channel.id,
                     text
                 }, {
-                    upsert: true
+                    upsert: true,
+                    useFindAndModify: false
                 })
             } finally {
 
