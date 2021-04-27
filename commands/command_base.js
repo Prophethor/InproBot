@@ -1,4 +1,4 @@
-const prefix = "!"
+const prefixes = ["yo ", "!"]
 
 const validatePermissions = (permissions) => {
     const validPermissions = [
@@ -75,49 +75,52 @@ module.exports = (commandOptions) => {
 module.exports.listen = (client) => {
     client.on('message', message => {
         const {member, content, guild} = message
-        const arguments = content.split(/[ ]+/)
-        const name = arguments.shift().toLowerCase()
-        if(name.startsWith(prefix)) {
-            const alias = allAliases[name.replace(prefix,'')]
-            if(!alias) {
+        prefixes.forEach(prefix => {
+            const regex = new RegExp(prefix + '\\w+\\s*')
+            const nameArray = content.match(regex)
+            if(!nameArray) {
                 return
             }
-
-            const {
-                requiredPermissions=[],
-                permissionError="You don't have required permissions.",
-                requiredRoles = [],
-                roleError="You don't have required roles.",
-                minArgs = 0,
-                maxArgs = null,
-                expectedArgs = "",
-                callback
-            } = alias
-
-            for(const permission of requiredPermissions) {
-                if(!member.hasPermission(permission)){
-                    message.reply(permissionError)
+            const name = nameArray[0].trim()
+            
+            if(content.startsWith(name)){
+                const alias = allAliases[name.slice(prefix.length)]
+                if(!alias) {
                     return
                 }
-            }
-
-            for(const requiredRole of requiredRoles){
-                const role = guild.role.cache.find(role => {
-                    role.name === requiredRole
-                
+                const {
+                    requiredPermissions=[],
+                    permissionError="You don't have required permissions.",
+                    requiredRoles = [],
+                    roleError="You don't have required roles.",
+                    minArgs = 0,
+                    maxArgs = null,
+                    expectedArgs = "",
+                    callback
+                } = alias
+                for(const permission of requiredPermissions) {
+                    if(!member.hasPermission(permission)){
+                        message.reply(permissionError)
+                        return
+                    }
+                }
+                for(const requiredRole of requiredRoles){
+                    const role = guild.role.cache.find(role => {
+                        role.name === requiredRole
+                    })
                     if(!role || !member.roles.cache.has(role.id)){
                         message.reply(roleError)
                         return
                     }
-                })
+                }
+                const arguments = content.slice(prefix.length).split(/[ ]+/)
+                arguments.shift()
+                if(arguments.length < minArgs || (maxArgs !== null && arguments.length > maxArgs)){
+                    message.reply(`Incorrect syntax! Use ${name} ${expectedArgs}`)
+                    return
+                }
+                callback(message, arguments, arguments.join(' '))
             }
-
-            if(arguments.length < minArgs || (maxArgs !== null && arguments.length > maxArgs)){
-                message.reply(`Incorrect syntax! Use ${prefix}${alias} ${expectedArgs}`)
-                return
-            }
-
-            callback(message, arguments, arguments.join(' '))
-        }
+        })
     })
 }
