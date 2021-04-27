@@ -78,8 +78,8 @@ module.exports.listen = (client) => {
         const arguments = content.split(/[ ]+/)
         const name = arguments.shift().toLowerCase()
         if(name.startsWith(prefix)) {
-            const command = allAliases[name.replace(prefix,'')]
-            if(!command) {
+            const alias = allAliases[name.replace(prefix,'')]
+            if(!alias) {
                 return
             }
 
@@ -92,7 +92,7 @@ module.exports.listen = (client) => {
                 maxArgs = null,
                 expectedArgs = "",
                 callback
-            } = command
+            } = alias
 
             for(const permission of requiredPermissions) {
                 if(!member.hasPermission(permission)){
