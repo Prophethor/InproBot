@@ -132,6 +132,7 @@ module.exports.listen = (client) => {
                     message.reply(`Incorrect syntax! Use ${name} ${expectedArgs}`)
                     return
                 }
+                console.log(`Running command: ${name.slice(prefix.length)}`)
                 callback(message, arguments, arguments.join(' '))
             }
         })
