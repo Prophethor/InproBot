@@ -1,5 +1,18 @@
 const prefixes = ["yo ", "!"]
 
+/*  
+Command information:
+aliases - list of strings
+requiredPermissions - string or list of strings
+permissionError - string
+requiredRoles - string or list of strings
+roleError - string
+minArgs - number
+maxArgs - number
+expectedArgs - string
+callback - method
+*/
+
 const validatePermissions = (permissions) => {
     const validPermissions = [
         'CREATE_INSTANT_INVITE',
@@ -47,7 +60,7 @@ let allAliases = {}
 module.exports = (commandOptions) => {
     let {
         aliases,
-        permissions = []
+        requiredPermissions = []
     } = commandOptions
 
     if(typeof aliases === 'string') {
@@ -56,18 +69,18 @@ module.exports = (commandOptions) => {
 
     console.log(aliases[0])
 
-    if(permissions.length) {
-        if(typeof permissions === 'string') {
-            permissions = [permissions]
+    if(requiredPermissions.length) {
+        if(typeof requiredPermissions === 'string') {
+            requiredPermissions = [requiredPermissions]
         }
-        validatePermissions(permissions)
+        validatePermissions(requiredPermissions)
     }
 
     for(const command of aliases){
         allAliases[command] = {
             ...commandOptions,
             aliases,
-            permissions
+            requiredPermissions
         }
     }
 }
