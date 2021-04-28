@@ -67,7 +67,7 @@ module.exports = (commandOptions) => {
         aliases = [aliases]
     }
 
-    console.log(aliases[0])
+    console.log(`Detected command: ${aliases[0]}`)
 
     if(requiredPermissions.length) {
         if(typeof requiredPermissions === 'string') {
